@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "compile": "compact contract/src/skill-verification.compact contract/src/managed/skill-verification"
+    "compile": "compactc contract/src/skill-verification.compact contract/src/managed/skill-verification"
   },
   "author": "APIPAWE KATOTO DANIEL",
   "license": "MIT",

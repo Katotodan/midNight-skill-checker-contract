@@ -1,26 +1,30 @@
 # skill-checker
 
-A small Midnight contract that proves a user has a particular skill without revealing their private information.
+A Midnight compact contract that proves a user has a particular skill without revealing their private information.
 
-This repository contains the compact contract sources, compiled artifacts, keys, and Zero-Knowledge IR (ZKIR) for the skill verification flow.
+This repository contains the contract source, a witness helper, compiled artifacts, keys, and ZKIR files produced by the Midnight toolchain.
 
-## Contents
+## Repository layout
 
+- `package.json` — project metadata and scripts
 - `contract/src/skill-verification.compact` — compact contract source
-- `contract/src/witness.ts` — witness helper for tests or proving
-(The file below will be create after sucessfully compiler the contract with **npm run compile** command)
-- `contract/src/managed/skill-verification/` — compiled contract artifacts, keys and ZKIR
+- `contract/src/witness.ts` — witness helper / test utilities
+
+<br/>
+(The file below will be create after sucessfully compiler the contract with npm run compile command)
+- `contract/src/managed/skill-verification/` — compiled artifacts produced by the `compile` script
   - `compiler/contract-info.json` — compiler metadata
-  - `contract/index.cjs` — compiled contract (CommonJS)
+  - `contract/index.cjs` — compiled contract module
   - `keys/` — prover & verifier keys for submit/update/verify flows
-  - `zkir/` — compiled ZKIR and bzkir artifacts used by proof tooling
+  - `zkir/` — ZKIR and .bzkir artifacts used by proof tooling
+- `tests/` — (optional) tests and example harnesses
 
 ## Quick start
 
 Prerequisites
 
-- Node.js (16+ recommended)
-- `compact` compiler in your PATH (used by the `compile` script)
+- Node.js 16+ (recommended)
+- The `compactc` compiler available in your PATH (used by the `compile` script)
 
 Install dependencies:
 
@@ -28,42 +32,45 @@ Install dependencies:
 npm install
 ```
 
-Compile the compact contract (this produces the managed/skill-verification folder):
+Compile the compact contract (this writes into `contract/src/managed/skill-verification`):
 
 ```bash
 npm run compile
 ```
 
-Notes
-
-- The `compile` script calls:
+The `compile` script runs:
 
 ```
-compact contract/src/skill-verification.compact contract/src/managed/skill-verification
+compactc contract/src/skill-verification.compact contract/src/managed/skill-verification
 ```
 
-- If you don't have `compact` installed, install it according to the Midnight docs for your platform.
+If `compactc` is not installed, follow Midnight's documentation to install or build the compiler for your platform.
 
-## Using the artifacts
+## Using the compiled artifacts
 
-- The compiled contract code is present at `contract/src/managed/skill-verification/contract/index.cjs`.
-- Keys for proving/verifying are in `contract/src/managed/skill-verification/keys/`.
-- ZKIR files used by Midnight tooling are in `contract/src/managed/skill-verification/zkir/`.
+- The compiled contract is available at `contract/src/managed/skill-verification/contract/index.cjs` and can be required/imported from Node code that uses the Midnight runtime.
+- Use the keys in `contract/src/managed/skill-verification/keys/` for generating and verifying proofs.
+- ZKIR files in `contract/src/managed/skill-verification/zkir/` are used by Midnight proof tooling and providers.
 
-You can import or require the compiled contract when building dapps or tests that use the Midnight runtime and proof providers listed in `package.json`.
+The project's `package.json` already lists Midnight runtime and helper packages such as `@midnight-ntwrk/compact-runtime`, `@midnight-ntwrk/midnight-js-testing`, and proof providers.
 
 ## Scripts
 
-- `npm run compile` — compile the compact contract (see above)
+- `npm run compile` — compile the compact contract
+- `npm test` — placeholder (no tests defined yet)
 
-## Development & testing
+## Development notes
 
-This project doesn't ship CI or unit tests yet. For local testing you can use the Midnight testing utilities from the dependencies listed in `package.json` (for example `@midnight-ntwrk/midnight-js-testing`). Typical steps:
+Common local workflow:
 
-1. Compile the contract (`npm run compile`).
-2. Use the keys in `contract/src/managed/skill-verification/keys/` to run or simulate proofs with your chosen Midnight proof provider.
+1. Make changes to `contract/src/skill-verification.compact`.
+2. Run `npm run compile` to regenerate managed artifacts.
+3. Use the compiled contract, keys, and ZKIR in your dapp or test harness.
 
-If you'd like, I can add an example test harness showing a minimal proof/verify flow using `@midnight-ntwrk/midnight-js-testing` — tell me and I will scaffold it.
+If you want, I can add:
+
+- A minimal test harness demonstrating a proof + verify cycle using `@midnight-ntwrk/midnight-js-testing`.
+- CI configuration to automatically compile and run tests.
 
 ## Project metadata
 
@@ -74,7 +81,7 @@ If you'd like, I can add an example test harness showing a minimal proof/verify 
 
 ## License
 
-This project is released under the MIT License. See the `LICENSE` file if present.
+This project is distributed under the MIT License.
 
 ---
-This project is part of the midnight hackathon, the UI will also be added soon. 
+This project is part of the midnight hackathon, the UI will also be added soon.
