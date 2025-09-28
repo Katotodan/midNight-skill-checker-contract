@@ -1,0 +1,55 @@
+pragma language_version >= 0.16 && <= 0.17;
+
+import CompactStandardLibrary;
+
+// Map from user public address to zk proof hash
+export ledger userProofs: Map<Bytes<32>, Bytes<32>>;
+export ledger round: Counter;
+
+
+// Witness: user provides a zk proof attesting to their skill
+witness getSkillProof(): Bytes<32>;
+
+
+
+// Circuit to update the user's zk proof for the current round
+export circuit submitSkillProof(user: Bytes<32>): [] {
+    // Check if the user has already submitted a proof this round
+    assert(userProofs.member(disclose(user)) == false, "Proof already submitted for this round");
+    
+  
+  // Derive a unique key for this user and round to avoid linkability
+  const uniqueKey = publicKey(user, (round as Field) as Bytes<32>);
+ 
+  // Get the zk proof from the user (off-chain)
+  const skillProof = getSkillProof();
+  // Store the proof in the map, explicitly disclosing both uniqueKey and skillProof
+  userProofs.insert(disclose(uniqueKey), disclose(skillProof));
+}
+
+// Circuit to verify the stored zk proof for a user in the current round
+export circuit verifySkillProof(user: Bytes<32>, providedProof: Bytes<32>): Boolean {
+  // Derive the same unique key
+  const uniqueKey = publicKey(user, (round as Field) as Bytes<32>);
+  // Lookup the stored proof for the user
+  const storedProof = userProofs.lookup(disclose(uniqueKey));
+  // Return true if the provided proof matches the stored proof
+  return storedProof == providedProof;
+}
+
+// Updating the proof
+witness secretKey(): Bytes<32>;
+
+
+export circuit updateSkillProof(user: Bytes<32>): [] {
+  const sk = secretKey();
+  const pk = publicKey(sk, (round as Field) as Bytes<32>);
+  assert(pk == user, "Unauthorized: not the user");
+  const uniqueKey = publicKey(user, (round as Field) as Bytes<32>);
+  const skillProof = getSkillProof();
+  userProofs.insert(disclose(uniqueKey), disclose(skillProof));
+}
+
+circuit publicKey(sk: Bytes<32>, sequence: Bytes<32>): Bytes<32> {
+    return persistentHash<Vector<3, Bytes<32>>>([pad(32, "bboard:pk:"), sequence, disclose(sk)]);
+}

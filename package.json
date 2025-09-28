@@ -1,0 +1,25 @@
+{
+  "name": "skill-checker",
+  "version": "1.0.0",
+  "description": "This contract proves that an user have a certain skill without showing the private informations of the user.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "compact contract/src/skill-verification.compact contract/src/managed/skill-verification"
+  },
+  "author": "APIPAWE KATOTO DANIEL",
+  "license": "MIT",
+  "dependencies": {
+    "@midnight-ntwrk/compact-runtime": "^0.8.1",
+    "@midnight-ntwrk/dapp-connector-api": "^3.0.0",
+    "@midnight-ntwrk/midnight-js-contracts": "^2.0.2",
+    "@midnight-ntwrk/midnight-js-http-client-proof-provider": "^2.0.2",
+    "@midnight-ntwrk/midnight-js-indexer-public-data-provider": "^2.0.2",
+    "@midnight-ntwrk/midnight-js-level-private-state-provider": "^2.0.2",
+    "@midnight-ntwrk/midnight-js-node-zk-config-provider": "^2.0.2",
+    "@midnight-ntwrk/midnight-js-testing": "^2.0.2",
+    "@midnight-ntwrk/midnight-js-utils": "^2.0.2",
+    "@midnight-ntwrk/wallet": "^5.0.0",
+    "pino": "^9.9.0"
+  }
+}
